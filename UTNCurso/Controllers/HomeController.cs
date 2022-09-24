@@ -1,40 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UTNCurso.Data;
+using UTNCurso.Extensions;
 using UTNCurso.Models;
 
 namespace UTNCurso.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly TodoContext _context;
+        private readonly TodoItem _todoItemModel;
 
         public HomeController(TodoContext context)
         {
-            _context = context;
+            _todoItemModel = new TodoItem(context);
         }
 
         // GET: TodoItems
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TodoItem.ToListAsync());
+            return View(await _todoItemModel.GetAllAsync());
         }
 
         // GET: TodoItems/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || _context.TodoItem == null)
+            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _context.TodoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var todoItem = await _todoItemModel.GetAsync(id.Value);
             if (todoItem == null)
             {
                 return NotFound();
@@ -54,17 +60,18 @@ namespace UTNCurso.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Task,IsCompleted")] TodoItem todoItem)
         {
-            if (todoItem.Task.StartsWith("*"))
+            var result = await _todoItemModel.CreateAsync(todoItem);
+
+            if (!result.IsSuccessful)
             {
-                ModelState.AddModelError("Task", "Cannot use asterisk");
+                ModelState.AddModelError(result.Errors);
             }
 
             if (ModelState.IsValid)
             {
-                _context.Add(todoItem);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(todoItem);
@@ -73,16 +80,18 @@ namespace UTNCurso.Controllers
         // GET: TodoItems/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.TodoItem == null)
+            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _context.TodoItem.FindAsync(id);
+            var todoItem = await _todoItemModel.GetAsync(id.Value);
+
             if (todoItem == null)
             {
                 return NotFound();
             }
+
             return View(todoItem);
         }
 
@@ -98,24 +107,11 @@ namespace UTNCurso.Controllers
                 return NotFound();
             }
 
+            var result = await _todoItemModel.UpdateAsync(todoItem);
+            ModelState.AddModelError(result.Errors);
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(todoItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TodoItemExists(todoItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(todoItem);
@@ -124,13 +120,13 @@ namespace UTNCurso.Controllers
         // GET: TodoItems/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.TodoItem == null)
+            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _context.TodoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var todoItem = await _todoItemModel.GetAsync(id.Value);
+
             if (todoItem == null)
             {
                 return NotFound();
@@ -140,27 +136,35 @@ namespace UTNCurso.Controllers
         }
 
         // POST: TodoItems/Delete/5
-        [HttpHead, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.TodoItem == null)
+            if (!await _todoItemModel.IsModelAvailableAsync())
             {
                 return Problem("Entity set 'TodoContext.TodoItem'  is null.");
             }
-            var todoItem = await _context.TodoItem.FindAsync(id);
-            if (todoItem != null)
+
+            var result = await _todoItemModel.RemoveAsync(id);
+
+            if (result.StatusCode == (int)HttpStatusCode.NotFound)
             {
-                _context.TodoItem.Remove(todoItem);
+                return NotFound();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TodoItemExists(long id)
+        public IActionResult DevError()
         {
-            return _context.TodoItem.Any(e => e.Id == id);
+            var featureException = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current.Id,
+                Message = featureException.Error.Message,
+                StackTrace = featureException.Error.StackTrace
+            });
         }
     }
 }
