@@ -7,15 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UTNCurso.BLL.Bootstrappers\UTNCurso.BLL.Bootstrappers.csproj" />
+    <ProjectReference Include="..\UTNCurso.BLL.DTOs\UTNCurso.BLL.DTOs.csproj" />
+    <ProjectReference Include="..\UTNCurso.BLL.Services\UTNCurso.BLL.Services.csproj" />
+    <ProjectReference Include="..\UTNCurso.Common.Entities\UTNCurso.Common.Entities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

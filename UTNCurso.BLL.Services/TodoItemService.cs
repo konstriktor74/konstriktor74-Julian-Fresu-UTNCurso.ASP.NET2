@@ -1,37 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using Microsoft.EntityFrameworkCore;
-using UTNCurso.Data;
+using UTNCurso.BLL.DTOs;
+using UTNCurso.BLL.POCOs;
+using UTNCurso.BLL.Services.Interfaces;
+using UTNCurso.BLL.Services.Mappers;
+using UTNCurso.Common.Entities;
+using UTNCurso.DAL.EFCore;
 
-namespace UTNCurso.Models
+namespace UTNCurso.BLL.Services
 {
-    public class TodoItem
+    public class TodoItemService : ITodoItemService
     {
         private readonly TodoContext _context;
+        private readonly IMapper<TodoItem, TodoItemDto> _mapper;
 
-        public TodoItem()
-        {
-        }
-
-        public TodoItem(TodoContext context)
+        public TodoItemService(
+            TodoContext context,
+            IMapper<TodoItem, TodoItemDto> mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public long Id { get; set; }
-
-        [Required]
-        [MaxLength(10)]
-        public string Task { get; set; }
-
-        public bool IsCompleted { get; set; }
-
-        [ConcurrencyCheck]
-        public DateTime LastModifiedDate { get; set; }
-
-        public async Task<IEnumerable<TodoItem>> GetAllAsync()
+        public async Task<IEnumerable<TodoItemDto>> GetAllAsync()
         {
-            return await _context.TodoItem.ToListAsync();
+            return _mapper.MapDalToDto(await _context.TodoItem.ToListAsync());
         }
 
         public async ValueTask<bool> IsModelAvailableAsync()
@@ -39,43 +32,43 @@ namespace UTNCurso.Models
             return await ValueTask.FromResult(_context.TodoItem != null);
         }
 
-        public async Task<TodoItem> GetAsync(long id)
+        public async Task<TodoItemDto> GetAsync(long id)
         {
-            return await _context.TodoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return _mapper.MapDalToDto(await _context.TodoItem
+                .FirstOrDefaultAsync(m => m.Id == id));
         }
 
-        public async Task<Result> CreateAsync(TodoItem todoItem)
+        public async Task<Result> CreateAsync(TodoItemDto todoItemdto)
         {
             Result result = new Result();
 
-            CheckInputIsValid(todoItem, result);
+            CheckInputIsValid(todoItemdto, result);
 
             if (result.IsSuccessful)
             {
-                _context.Add(todoItem);
+                _context.Add(_mapper.MapDtoToDal(todoItemdto));
                 await _context.SaveChangesAsync();
             }
 
             return result;
         }
 
-        public async Task<Result> UpdateAsync(TodoItem todoItem)
+        public async Task<Result> UpdateAsync(TodoItemDto todoItemDto)
         {
             Result result = new Result();
-            CheckInputIsValid(todoItem, result);
+            CheckInputIsValid(todoItemDto, result);
 
             try
             {
                 if (result.IsSuccessful)
                 {
-                    _context.Update(todoItem);
+                    _context.Update(_mapper.MapDtoToDal(todoItemDto));
                     await _context.SaveChangesAsync();
                 }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TodoItemExists(todoItem.Id))
+                if (!TodoItemExists(todoItemDto.Id))
                 {
                     result.SetStatus((int)HttpStatusCode.NotFound);
 
@@ -93,9 +86,9 @@ namespace UTNCurso.Models
         public async Task<Result> RemoveAsync(long id)
         {
             Result result = new Result();
-            var todoItem = await GetAsync(id);
+            var todoItemDto = await GetAsync(id);
 
-            if (todoItem == null)
+            if (todoItemDto == null)
             {
                 result.AddError(string.Empty, "The task doesn't exist");
                 result.SetStatus((int)HttpStatusCode.NotFound);
@@ -103,13 +96,13 @@ namespace UTNCurso.Models
                 return result;
             }
 
-            _context.TodoItem.Remove(todoItem);
+            _context.TodoItem.Remove(_mapper.MapDtoToDal(todoItemDto));
             await _context.SaveChangesAsync();
 
             return result;
         }
 
-        private void CheckInputIsValid(TodoItem todoItem, Result result)
+        private void CheckInputIsValid(TodoItemDto todoItem, Result result)
         {
             if (todoItem.Task.StartsWith("*"))
             {

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using UTNCurso.Data;
+using UTNCurso.BLL.DTOs;
+using UTNCurso.BLL.Services.Interfaces;
 using UTNCurso.Extensions;
 using UTNCurso.Models;
 
@@ -18,29 +13,29 @@ namespace UTNCurso.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly TodoItem _todoItemModel;
+        private readonly ITodoItemService _todoItemService;
 
-        public HomeController(TodoContext context)
+        public HomeController(ITodoItemService todoItemService)
         {
-            _todoItemModel = new TodoItem(context);
+            _todoItemService = todoItemService;
         }
 
         // GET: TodoItems
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _todoItemModel.GetAllAsync());
+            return View(await _todoItemService.GetAllAsync());
         }
 
         // GET: TodoItems/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
+            if (id == null || !await _todoItemService.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _todoItemModel.GetAsync(id.Value);
+            var todoItem = await _todoItemService.GetAsync(id.Value);
             if (todoItem == null)
             {
                 return NotFound();
@@ -61,9 +56,9 @@ namespace UTNCurso.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Task,IsCompleted")] TodoItem todoItem)
+        public async Task<IActionResult> Create([Bind("Id,Task,IsCompleted")] TodoItemDto todoItemDto)
         {
-            var result = await _todoItemModel.CreateAsync(todoItem);
+            var result = await _todoItemService.CreateAsync(todoItemDto);
 
             if (!result.IsSuccessful)
             {
@@ -74,18 +69,18 @@ namespace UTNCurso.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            return View(todoItem);
+            return View(todoItemDto);
         }
 
         // GET: TodoItems/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
+            if (id == null || !await _todoItemService.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _todoItemModel.GetAsync(id.Value);
+            var todoItem = await _todoItemService.GetAsync(id.Value);
 
             if (todoItem == null)
             {
@@ -100,14 +95,14 @@ namespace UTNCurso.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Task,IsCompleted")] TodoItem todoItem)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Task,IsCompleted")] TodoItemDto todoItem)
         {
             if (id != todoItem.Id)
             {
                 return NotFound();
             }
 
-            var result = await _todoItemModel.UpdateAsync(todoItem);
+            var result = await _todoItemService.UpdateAsync(todoItem);
             ModelState.AddModelError(result.Errors);
 
             if (ModelState.IsValid)
@@ -120,12 +115,12 @@ namespace UTNCurso.Controllers
         // GET: TodoItems/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || !await _todoItemModel.IsModelAvailableAsync())
+            if (id == null || !await _todoItemService.IsModelAvailableAsync())
             {
                 return NotFound();
             }
 
-            var todoItem = await _todoItemModel.GetAsync(id.Value);
+            var todoItem = await _todoItemService.GetAsync(id.Value);
 
             if (todoItem == null)
             {
@@ -140,12 +135,12 @@ namespace UTNCurso.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (!await _todoItemModel.IsModelAvailableAsync())
+            if (!await _todoItemService.IsModelAvailableAsync())
             {
                 return Problem("Entity set 'TodoContext.TodoItem'  is null.");
             }
 
-            var result = await _todoItemModel.RemoveAsync(id);
+            var result = await _todoItemService.RemoveAsync(id);
 
             if (result.StatusCode == (int)HttpStatusCode.NotFound)
             {

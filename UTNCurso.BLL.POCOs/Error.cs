@@ -1,4 +1,4 @@
-﻿namespace UTNCurso.Models
+﻿namespace UTNCurso.BLL.POCOs
 {
     public class Error
     {

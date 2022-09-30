@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UTNCurso.BLL.DTOs\UTNCurso.BLL.DTOs.csproj" />
+    <ProjectReference Include="..\UTNCurso.BLL.POCOs\UTNCurso.BLL.POCOs.csproj" />
+    <ProjectReference Include="..\UTNCurso.Common.Entities\UTNCurso.Common.Entities.csproj" />
+    <ProjectReference Include="..\UTNCurso.DAL.EFCore\UTNCurso.DAL.EFCore.csproj" />
+  </ItemGroup>
+
+</Project>

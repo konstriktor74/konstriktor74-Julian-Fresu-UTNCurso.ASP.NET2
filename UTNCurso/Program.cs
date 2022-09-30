@@ -1,14 +1,20 @@
-using Microsoft.EntityFrameworkCore;
-using UTNCurso.Data;
-using UTNCurso.Models;
+using UTNCurso.BLL.Bootstrappers;
+using UTNCurso.BLL.DTOs;
+using UTNCurso.BLL.Services;
+using UTNCurso.BLL.Services.Interfaces;
+using UTNCurso.BLL.Services.Mappers;
+using UTNCurso.Common.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TodoContext>(options =>
-    /*options.UseSqlServer(builder.Configuration.GetConnectionString("TodoContext") ?? throw new InvalidOperationException("Connection string 'TodoContext' not found."))*/
-    options.UseInMemoryDatabase("TodoContext"));
 
+builder.Services
+    .SetupDatabase(builder.Configuration.GetConnectionString("TodoContext"));
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<TodoContext>();
+    .SetupIdentity();
+builder.Services
+    .AddSingleton<IMapper<TodoItem, TodoItemDto>, TodoItemMapper>();
+builder.Services
+    .AddTransient<ITodoItemService, TodoItemService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
