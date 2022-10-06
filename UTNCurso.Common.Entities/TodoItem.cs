@@ -1,4 +1,6 @@
-﻿namespace UTNCurso.Common.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UTNCurso.Common.Entities
 {
     public class TodoItem
     {
@@ -9,5 +11,7 @@
         public bool IsCompleted { get; set; }
 
         public DateTime? LastModifiedDate { get; set; }
+
+        public int RowVersion { get; set; }
     }
 }

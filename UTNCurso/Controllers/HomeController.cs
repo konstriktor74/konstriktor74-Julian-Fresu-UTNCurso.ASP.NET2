@@ -28,6 +28,7 @@ namespace UTNCurso.Controllers
         }
 
         // GET: TodoItems/Details/5
+        [Authorize(Policy = "IsAdult")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || !await _todoItemService.IsModelAvailableAsync())

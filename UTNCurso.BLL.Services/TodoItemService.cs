@@ -62,11 +62,16 @@ namespace UTNCurso.BLL.Services
             {
                 if (result.IsSuccessful)
                 {
-                    _context.Update(_mapper.MapDtoToDal(todoItemDto));
+                    todoItemDto.LastModifiedDate = DateTime.UtcNow;
+                    var entity = _mapper.MapDtoToDal(todoItemDto);
+                    var rowEntity = await _context.TodoItem.FirstOrDefaultAsync(x => x.Id == todoItemDto.Id);
+                    _context.Entry(rowEntity).State = EntityState.Detached;
+                    entity.RowVersion = rowEntity.RowVersion;
+                    _context.Update(entity);
                     await _context.SaveChangesAsync();
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!TodoItemExists(todoItemDto.Id))
                 {
@@ -76,7 +81,20 @@ namespace UTNCurso.BLL.Services
                 }
                 else
                 {
-                    throw;
+                    if (ex.Entries.Any())
+                    {
+                        foreach (var entry in ex.Entries)
+                        {
+                            var dbValues = entry.GetDatabaseValues();
+                            entry.OriginalValues.SetValues(dbValues);
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
@@ -86,9 +104,10 @@ namespace UTNCurso.BLL.Services
         public async Task<Result> RemoveAsync(long id)
         {
             Result result = new Result();
-            var todoItemDto = await GetAsync(id);
+            var todoItem = await _context.TodoItem
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (todoItemDto == null)
+            if (todoItem == null)
             {
                 result.AddError(string.Empty, "The task doesn't exist");
                 result.SetStatus((int)HttpStatusCode.NotFound);
@@ -96,7 +115,7 @@ namespace UTNCurso.BLL.Services
                 return result;
             }
 
-            _context.TodoItem.Remove(_mapper.MapDtoToDal(todoItemDto));
+            _context.TodoItem.Remove(todoItem);
             await _context.SaveChangesAsync();
 
             return result;

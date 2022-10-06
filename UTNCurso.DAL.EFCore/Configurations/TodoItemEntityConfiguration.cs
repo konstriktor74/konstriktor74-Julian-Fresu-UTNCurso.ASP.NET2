@@ -12,8 +12,9 @@ namespace UTNCurso.DAL.EFCore.Configurations
                 .IsRequired()
                 .HasMaxLength(10);
 
-            builder.Property(x => x.LastModifiedDate)
-                .IsConcurrencyToken();
+            builder.Property(x => x.RowVersion)
+                .HasDefaultValue(0)
+                .IsRowVersion();
         }
     }
 }

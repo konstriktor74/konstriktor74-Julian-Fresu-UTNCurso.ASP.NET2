@@ -12,7 +12,6 @@ namespace UTNCurso.BLL.DTOs
 
         public bool IsCompleted { get; set; }
 
-        [ConcurrencyCheck]
         public DateTime? LastModifiedDate { get; set; }
     }
 }
