@@ -25,7 +25,15 @@ builder.Services.AddAuthorization(opt =>
 builder.Services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Logging.ClearProviders();
+builder.Logging.AddJsonConsole(x =>
+{
+    x.JsonWriterOptions = new System.Text.Json.JsonWriterOptions
+    {
+        Indented = true
+    };
+    x.IncludeScopes = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -6,36 +6,36 @@ using UTNCurso.BLL.Services.Interfaces;
 using UTNCurso.BLL.Services.Mappers;
 using UTNCurso.Common.Entities;
 using UTNCurso.DAL.EFCore;
+using UTNCurso.DAL.EFCore.Repository;
 
 namespace UTNCurso.BLL.Services
 {
     public class TodoItemService : ITodoItemService
     {
-        private readonly TodoContext _context;
+        private readonly ITodoItemRepository _todoItemRepository;
         private readonly IMapper<TodoItem, TodoItemDto> _mapper;
 
         public TodoItemService(
-            TodoContext context,
-            IMapper<TodoItem, TodoItemDto> mapper)
+            IMapper<TodoItem, TodoItemDto> mapper,
+            ITodoItemRepository todoItemRepository)
         {
-            _context = context;
             _mapper = mapper;
+            _todoItemRepository = todoItemRepository;
         }
 
         public async Task<IEnumerable<TodoItemDto>> GetAllAsync()
         {
-            return _mapper.MapDalToDto(await _context.TodoItem.ToListAsync());
+            return _mapper.MapDalToDto(await _todoItemRepository.GetAll());
         }
 
         public async ValueTask<bool> IsModelAvailableAsync()
         {
-            return await ValueTask.FromResult(_context.TodoItem != null);
+            return await ValueTask.FromResult(_todoItemRepository != null);
         }
 
         public async Task<TodoItemDto> GetAsync(long id)
         {
-            return _mapper.MapDalToDto(await _context.TodoItem
-                .FirstOrDefaultAsync(m => m.Id == id));
+            return _mapper.MapDalToDto(await _todoItemRepository.GetById(id));
         }
 
         public async Task<Result> CreateAsync(TodoItemDto todoItemdto)
@@ -46,8 +46,8 @@ namespace UTNCurso.BLL.Services
 
             if (result.IsSuccessful)
             {
-                _context.Add(_mapper.MapDtoToDal(todoItemdto));
-                await _context.SaveChangesAsync();
+                await _todoItemRepository.Add(_mapper.MapDtoToDal(todoItemdto));
+                await _todoItemRepository.SaveChangesAsync();
             }
 
             return result;
@@ -64,16 +64,15 @@ namespace UTNCurso.BLL.Services
                 {
                     todoItemDto.LastModifiedDate = DateTime.UtcNow;
                     var entity = _mapper.MapDtoToDal(todoItemDto);
-                    var rowEntity = await _context.TodoItem.FirstOrDefaultAsync(x => x.Id == todoItemDto.Id);
-                    _context.Entry(rowEntity).State = EntityState.Detached;
+                    var rowEntity = await _todoItemRepository.GetById(todoItemDto.Id);
                     entity.RowVersion = rowEntity.RowVersion;
-                    _context.Update(entity);
-                    await _context.SaveChangesAsync();
+                    await _todoItemRepository.Update(entity);
+                    await _todoItemRepository.SaveChangesAsync();
                 }
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                if (!TodoItemExists(todoItemDto.Id))
+                if (!await TodoItemExists(todoItemDto.Id))
                 {
                     result.SetStatus((int)HttpStatusCode.NotFound);
 
@@ -89,7 +88,7 @@ namespace UTNCurso.BLL.Services
                             entry.OriginalValues.SetValues(dbValues);
                         }
 
-                        await _context.SaveChangesAsync();
+                        await _todoItemRepository.SaveChangesAsync();
                     }
                     else
                     {
@@ -104,8 +103,7 @@ namespace UTNCurso.BLL.Services
         public async Task<Result> RemoveAsync(long id)
         {
             Result result = new Result();
-            var todoItem = await _context.TodoItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var todoItem = await _todoItemRepository.GetById(id);
 
             if (todoItem == null)
             {
@@ -115,8 +113,8 @@ namespace UTNCurso.BLL.Services
                 return result;
             }
 
-            _context.TodoItem.Remove(todoItem);
-            await _context.SaveChangesAsync();
+            await _todoItemRepository.Remove(todoItem.Id);
+            await _todoItemRepository.SaveChangesAsync();
 
             return result;
         }
@@ -129,9 +127,9 @@ namespace UTNCurso.BLL.Services
             }
         }
 
-        private bool TodoItemExists(long id)
+        private async Task<bool> TodoItemExists(long id)
         {
-            return _context.TodoItem.Any(e => e.Id == id);
+            return await _todoItemRepository.GetById(id) != null;
         }
     }
 }

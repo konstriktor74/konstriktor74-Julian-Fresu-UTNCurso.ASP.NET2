@@ -14,10 +14,12 @@ namespace UTNCurso.Controllers
     public class HomeController : Controller
     {
         private readonly ITodoItemService _todoItemService;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ITodoItemService todoItemService)
+        public HomeController(ITodoItemService todoItemService, ILogger<HomeController> logger)
         {
             _todoItemService = todoItemService;
+            _logger = logger;
         }
 
         // GET: TodoItems
@@ -59,18 +61,26 @@ namespace UTNCurso.Controllers
         [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Task,IsCompleted")] TodoItemDto todoItemDto)
         {
-            var result = await _todoItemService.CreateAsync(todoItemDto);
+            _logger.LogInformation("Starting creation");
 
-            if (!result.IsSuccessful)
+            using(var scope = _logger.BeginScope("Log under transaction scope"))
             {
-                ModelState.AddModelError(result.Errors);
-            }
+                var result = await _todoItemService.CreateAsync(todoItemDto);
+                _logger.LogInformation("Todo Item was created");
+                
+                if (!result.IsSuccessful)
+                {
+                    _logger.LogError("Something fail trying to create the todo item");
+                    ModelState.AddModelError(result.Errors);
+                }
 
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _logger.LogWarning("Todo item was succesfully created, redirecting");
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(todoItemDto);
             }
-            return View(todoItemDto);
         }
 
         // GET: TodoItems/Edit/5

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using UTNCurso.Common.Entities;
 using UTNCurso.DAL.EFCore;
+using UTNCurso.DAL.EFCore.Repository;
 
 namespace UTNCurso.BLL.Bootstrappers
 {
@@ -11,6 +13,7 @@ namespace UTNCurso.BLL.Bootstrappers
         {
             services.AddDbContext<TodoContext>(options =>
                 options.UseSqlite(connectionString ?? throw new InvalidOperationException("Connection string 'TodoContext' not found.")));
+            services.AddScoped<ITodoItemRepository, TodoItemRepository>();
 
             return services;
         }
