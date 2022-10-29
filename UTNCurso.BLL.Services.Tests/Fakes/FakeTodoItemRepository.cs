@@ -5,19 +5,24 @@ namespace UTNCurso.BLL.Services.Tests.Fakes
 {
     public class FakeTodoItemRepository : ITodoItemRepository
     {
-        public Task Add(TodoItem entity)
+        public List<TodoItem> Store { get; set; } = new List<TodoItem>();
+
+        public TodoItem LastAdded { get; set; }
+
+        public async Task Add(TodoItem entity)
         {
-            throw new NotImplementedException();
+            Store.Add(entity);
+            await Task.CompletedTask;
         }
 
-        public Task<IEnumerable<TodoItem>> GetAll()
+        public async Task<IEnumerable<TodoItem>> GetAll()
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(Store);
         }
 
-        public Task<TodoItem> GetById(long id)
+        public async Task<TodoItem> GetById(long id)
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(Store.FirstOrDefault(x => x.Id == id));
         }
 
         public Task Remove(long id)
@@ -25,14 +30,16 @@ namespace UTNCurso.BLL.Services.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
         }
 
-        public Task Update(TodoItem entity)
+        public async Task Update(TodoItem entity)
         {
-            throw new NotImplementedException();
+            var storedEntity = Store.FirstOrDefault(x => x.Id == entity.Id);
+            Store.Remove(storedEntity);
+            Store.Add(entity);
         }
     }
 }

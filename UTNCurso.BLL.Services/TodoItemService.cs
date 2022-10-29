@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using UTNCurso.BLL.DTOs;
 using UTNCurso.BLL.POCOs;
 using UTNCurso.BLL.Services.Interfaces;
@@ -14,13 +15,16 @@ namespace UTNCurso.BLL.Services
     {
         private readonly ITodoItemRepository _todoItemRepository;
         private readonly IMapper<TodoItem, TodoItemDto> _mapper;
+        private readonly ILogger<TodoItemService> _logger;
 
         public TodoItemService(
             IMapper<TodoItem, TodoItemDto> mapper,
-            ITodoItemRepository todoItemRepository)
+            ITodoItemRepository todoItemRepository,
+            ILogger<TodoItemService> logger)
         {
             _mapper = mapper;
             _todoItemRepository = todoItemRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<TodoItemDto>> GetAllAsync()
@@ -55,48 +59,51 @@ namespace UTNCurso.BLL.Services
 
         public async Task<Result> UpdateAsync(TodoItemDto todoItemDto)
         {
+            _logger.LogInformation("Updating todo item");
             Result result = new Result();
             CheckInputIsValid(todoItemDto, result);
 
-            try
+            using (_logger.BeginScope("Trying to update"))
             {
-                if (result.IsSuccessful)
+                try
                 {
-                    todoItemDto.LastModifiedDate = DateTime.UtcNow;
-                    var entity = _mapper.MapDtoToDal(todoItemDto);
-                    var rowEntity = await _todoItemRepository.GetById(todoItemDto.Id);
-                    entity.RowVersion = rowEntity.RowVersion;
-                    await _todoItemRepository.Update(entity);
-                    await _todoItemRepository.SaveChangesAsync();
-                }
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                if (!await TodoItemExists(todoItemDto.Id))
-                {
-                    result.SetStatus((int)HttpStatusCode.NotFound);
-
-                    return result;
-                }
-                else
-                {
-                    if (ex.Entries.Any())
+                    if (result.IsSuccessful)
                     {
-                        foreach (var entry in ex.Entries)
-                        {
-                            var dbValues = entry.GetDatabaseValues();
-                            entry.OriginalValues.SetValues(dbValues);
-                        }
-
+                        todoItemDto.LastModifiedDate = DateTime.UtcNow;
+                        var entity = _mapper.MapDtoToDal(todoItemDto);
+                        var rowEntity = await _todoItemRepository.GetById(todoItemDto.Id);
+                        entity.RowVersion = rowEntity.RowVersion;
+                        await _todoItemRepository.Update(entity);
                         await _todoItemRepository.SaveChangesAsync();
+                    }
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    if (!await TodoItemExists(todoItemDto.Id))
+                    {
+                        result.SetStatus((int)HttpStatusCode.NotFound);
+
+                        return result;
                     }
                     else
                     {
-                        throw;
+                        if (ex.Entries.Any())
+                        {
+                            foreach (var entry in ex.Entries)
+                            {
+                                var dbValues = entry.GetDatabaseValues();
+                                entry.OriginalValues.SetValues(dbValues);
+                            }
+
+                            await _todoItemRepository.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
             }
-
             return result;
         }
 
@@ -121,9 +128,9 @@ namespace UTNCurso.BLL.Services
 
         private void CheckInputIsValid(TodoItemDto todoItem, Result result)
         {
-            if (todoItem.Task.StartsWith("*"))
+            if (todoItem.Task.StartsWith("*") || todoItem.Task.Contains("#"))
             {
-                result.AddError("Task", "Cannot use asterisk");
+                result.AddError("Task", "Cannot use asterisk or hashtag");
             }
         }
 
