@@ -3,7 +3,6 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using UTNCurso.BLL.DTOs;
 using UTNCurso.BLL.Services.Interfaces;
 using UTNCurso.Extensions;
 using UTNCurso.Models;

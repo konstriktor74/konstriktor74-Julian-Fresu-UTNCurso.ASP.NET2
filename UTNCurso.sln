@@ -25,7 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTNCurso.Common.Entities", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTNCurso.BLL.Bootstrappers", "UTNCurso.BLL.Bootstrappers\UTNCurso.BLL.Bootstrappers.csproj", "{2BEA279E-51E8-40AC-9DA0-05215AA3F060}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTNCurso.BLL.Services.Tests", "UTNCurso.BLL.Services.Tests\UTNCurso.BLL.Services.Tests.csproj", "{5257A447-FB95-4B52-94ED-8316534D360B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTNCurso.BLL.Services.Tests", "UTNCurso.BLL.Services.Tests\UTNCurso.BLL.Services.Tests.csproj", "{5257A447-FB95-4B52-94ED-8316534D360B}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{70444DC1-89D6-4DF6-B8DF-85E2C2326F7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTNCurso.WebApi", "UTNCurso.WebApi\UTNCurso.WebApi.csproj", "{81854461-AFF5-4488-BE91-28ABAEBD1E91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +69,14 @@ Global
 		{5257A447-FB95-4B52-94ED-8316534D360B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5257A447-FB95-4B52-94ED-8316534D360B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5257A447-FB95-4B52-94ED-8316534D360B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70444DC1-89D6-4DF6-B8DF-85E2C2326F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70444DC1-89D6-4DF6-B8DF-85E2C2326F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70444DC1-89D6-4DF6-B8DF-85E2C2326F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70444DC1-89D6-4DF6-B8DF-85E2C2326F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81854461-AFF5-4488-BE91-28ABAEBD1E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81854461-AFF5-4488-BE91-28ABAEBD1E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81854461-AFF5-4488-BE91-28ABAEBD1E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81854461-AFF5-4488-BE91-28ABAEBD1E91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +90,7 @@ Global
 		{FB4E645A-D28E-4E87-8813-B0EC0117B546} = {551DB919-0ECE-4C84-A91E-3CE3BFA6BE57}
 		{2BEA279E-51E8-40AC-9DA0-05215AA3F060} = {1FD97A81-B01D-43C5-8350-3007A867504A}
 		{5257A447-FB95-4B52-94ED-8316534D360B} = {1FD97A81-B01D-43C5-8350-3007A867504A}
+		{81854461-AFF5-4488-BE91-28ABAEBD1E91} = {59EAE142-4C49-43DC-9A6F-20B242CB9608}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C1B4E58-50A6-45B2-A4CE-317248652763}

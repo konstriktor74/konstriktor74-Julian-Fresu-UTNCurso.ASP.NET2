@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  utncurso:
+    image: ${DOCKER_REGISTRY-}utncurso
+    build:
+      context: .
+      dockerfile: UTNCurso/Dockerfile
+      
+
