@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using UTNCurso.Core.Domain.Users;
 using UTNCurso.Models;
 
 namespace UTNCurso.Areas.Identity.Pages.Account

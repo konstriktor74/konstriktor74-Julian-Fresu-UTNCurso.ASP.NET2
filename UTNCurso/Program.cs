@@ -1,15 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using UTNCurso.BLL.Bootstrappers;
-using UTNCurso.BLL.Services;
-using UTNCurso.BLL.Services.Interfaces;
-using UTNCurso.BLL.Services.Mappers;
 using UTNCurso.BLL.Services.Requirements;
+using UTNCurso.Connector;
+using UTNCurso.Core.Domain.Agendas.Entities;
+using UTNCurso.Core.Domain.Services;
+using UTNCurso.Core.Domain.Users;
+using UTNCurso.Core.Interfaces;
+using UTNCurso.Core.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .SetupDatabase(builder.Configuration.GetConnectionString("TodoContext"));
+builder.Services.SetupDatabase(builder.Configuration.GetConnectionString("TodoContextSqlServer"));
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .SetupIdentity();
@@ -23,6 +25,10 @@ builder.Services.AddAuthorization(opt =>
     opt.AddPolicy("IsAdult", x => x.AddRequirements(new AgeRequirement(true, 21)));
 });
 builder.Services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
+builder.Services.AddHttpClient();
+builder.Services
+    .AddTransient<ITodoClient<TodoItemDto>, TodoClient>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Logging.ClearProviders();

@@ -6,5 +6,24 @@ services:
     build:
       context: .
       dockerfile: UTNCurso/Dockerfile
-      
-
+    links:
+        - sqlserver:sqlserver
+        - utncursoapi:webapi
+    ports:
+        - "443:443"
+    depends_on:
+        - sqlserver
+        - utncursoapi
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=yourStrong(!)Password
+    ports:
+      # Db
+        - "7777:1433"
+  utncursoapi:
+    image: ${DOCKER_REGISTRY-}utncursoapi
+    build:
+      context: .
+      dockerfile: UTNCursoApi/Dockerfile

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using UTNCurso.Common.Entities;
+using UTNCurso.Core.Domain.Users;
 
 namespace UTNCurso.Areas.Identity.Pages.Account
 {

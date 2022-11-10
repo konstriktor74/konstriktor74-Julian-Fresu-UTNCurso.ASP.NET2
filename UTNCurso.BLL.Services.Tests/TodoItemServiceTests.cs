@@ -1,10 +1,9 @@
 using UTNCurso.BLL.DTOs;
-using UTNCurso.BLL.Services.Interfaces;
-using UTNCurso.BLL.Services.Mappers;
-using UTNCurso.BLL.Services.Tests.Dummies;
 using UTNCurso.BLL.Services.Tests.Fakes;
 using UTNCurso.BLL.Services.Tests.Spy;
-using UTNCurso.Common.Entities;
+using UTNCurso.Core.Domain.Agendas.Entities;
+using UTNCurso.Core.Domain.Services;
+using UTNCurso.Core.Mappers;
 
 namespace UTNCurso.BLL.Services.Tests
 {
@@ -28,10 +27,12 @@ namespace UTNCurso.BLL.Services.Tests
         {
             // Arrange
             var mapper = new TodoItemMapper();
-            var repository = new FakeTodoItemRepository(); // Test doubles Fake object
+            var repository = new FakeAgendaRepository(); // Test doubles Fake object
+            var agendas = await repository.GetAll();
+            var agenda = agendas.FirstOrDefault();
             var todoService = new TodoItemService(mapper, repository, null);
-            await repository.Add(new Common.Entities.TodoItem { Id = 1});
-            await repository.Add(new Common.Entities.TodoItem { Id = 7 });
+            agenda.AddTodoItem(TodoItem.Create("test1", false));
+            agenda.AddTodoItem(TodoItem.Create("test2", true));
 
             // Act
             var results = await todoService.GetAllAsync();
@@ -45,9 +46,11 @@ namespace UTNCurso.BLL.Services.Tests
         {
             // Arrange
             var mapper = new TodoItemMapper();
-            var repository = new FakeTodoItemRepository(); // Test doubles Fake object
-            TodoItem entity = new TodoItem { Id = 1, Task = "test" };
-            await repository.Add(entity);
+            var repository = new FakeAgendaRepository(); // Test doubles Fake object
+            var agendas = await repository.GetAll();
+            var agenda = agendas.FirstOrDefault();
+            var entity = TodoItem.Create("test1", false, null, 1);
+            agenda.AddTodoItem(entity);
             var todoService = new TodoItemService(mapper, repository, null);
             var todoItem = new TodoItemDto { Id = 1, Task = "updated test" };
 
@@ -56,7 +59,7 @@ namespace UTNCurso.BLL.Services.Tests
 
             // Assert
             Assert.IsTrue(result.IsSuccessful);
-            Assert.AreNotEqual(repository.Store.FirstOrDefault(x => x.Id == entity.Id).Task, entity.Task);
+            Assert.AreNotEqual(agenda.TodoItems.FirstOrDefault(x => x.Id == entity.Id).Task, entity.Task);
         }
 
         [DataTestMethod]
@@ -66,9 +69,11 @@ namespace UTNCurso.BLL.Services.Tests
         {
             // Arrange
             var mapper = new TodoItemMapper();
-            var repository = new FakeTodoItemRepository(); // Test doubles Fake object
-            TodoItem entity = new TodoItem { Id = 1, Task = "test" };
-            await repository.Add(entity);
+            var repository = new FakeAgendaRepository(); // Test doubles Fake object
+            var agendas = await repository.GetAll();
+            var agenda = agendas.FirstOrDefault();
+            var entity = TodoItem.Create("test1", false, null, 1);
+            agenda.AddTodoItem(entity);
             SpyLogger<TodoItemService> logger = new SpyLogger<TodoItemService>(); // Test double Spy object
             var todoService = new TodoItemService(mapper, repository, logger); // Test doubles Dummy object
             var todoItem = new TodoItemDto { Id = 1, Task = taskName };

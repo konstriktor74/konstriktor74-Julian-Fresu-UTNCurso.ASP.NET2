@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using UTNCurso.Core.Domain.Users;
 using UTNCurso.Models;
 
 namespace UTNCurso.Areas.Identity.Pages.Account.Manage

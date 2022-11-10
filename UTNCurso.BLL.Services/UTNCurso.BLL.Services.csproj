@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,6 +14,7 @@
     <ProjectReference Include="..\UTNCurso.BLL.DTOs\UTNCurso.BLL.DTOs.csproj" />
     <ProjectReference Include="..\UTNCurso.BLL.POCOs\UTNCurso.BLL.POCOs.csproj" />
     <ProjectReference Include="..\UTNCurso.Common.Entities\UTNCurso.Common.Entities.csproj" />
+    <ProjectReference Include="..\UTNCurso.Core\UTNCurso.Core.csproj" />
     <ProjectReference Include="..\UTNCurso.DAL.EFCore\UTNCurso.DAL.EFCore.csproj" />
   </ItemGroup>
 

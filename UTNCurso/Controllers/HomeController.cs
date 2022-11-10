@@ -3,7 +3,8 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using UTNCurso.BLL.Services.Interfaces;
+using UTNCurso.Connector;
+using UTNCurso.Core.Interfaces;
 using UTNCurso.Extensions;
 using UTNCurso.Models;
 
@@ -12,33 +13,31 @@ namespace UTNCurso.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ITodoItemService _todoItemService;
         private readonly ILogger<HomeController> _logger;
+        private readonly ITodoClient<TodoItemDto> _todoApiClient;
+        private readonly ITodoItemService _todoItemService;
 
-        public HomeController(ITodoItemService todoItemService, ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ITodoClient<TodoItemDto> todoApiClient, ITodoItemService todoItemService)
         {
-            _todoItemService = todoItemService;
             _logger = logger;
+            _todoApiClient = todoApiClient;
+            _todoItemService = todoItemService;
         }
 
         // GET: TodoItems
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _todoItemService.GetAllAsync());
+            return View(await _todoApiClient.GetAllTodoItems());
         }
 
         // GET: TodoItems/Details/5
         [Authorize(Policy = "IsAdult")]
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || !await _todoItemService.IsModelAvailableAsync())
-            {
-                return NotFound();
-            }
+            var todoItem = await _todoApiClient.GetAsync(id.Value);
 
-            var todoItem = await _todoItemService.GetAsync(id.Value);
-            if (todoItem == null)
+            if(todoItem is null)
             {
                 return NotFound();
             }
@@ -64,7 +63,7 @@ namespace UTNCurso.Controllers
 
             using(var scope = _logger.BeginScope("Log under transaction scope"))
             {
-                var result = await _todoItemService.CreateAsync(todoItemDto);
+                var result = await _todoApiClient.CreateTodoItem(todoItemDto);
                 _logger.LogInformation("Todo Item was created");
                 
                 if (!result.IsSuccessful)
@@ -85,6 +84,8 @@ namespace UTNCurso.Controllers
         // GET: TodoItems/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
+            // TODO Migrar a web api
+
             if (id == null || !await _todoItemService.IsModelAvailableAsync())
             {
                 return NotFound();
@@ -107,6 +108,8 @@ namespace UTNCurso.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Task,IsCompleted")] TodoItemDto todoItem)
         {
+            // TODO Migrar a web api
+
             if (id != todoItem.Id)
             {
                 return NotFound();
@@ -145,6 +148,8 @@ namespace UTNCurso.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
+            // TODO Migrar a web api
+
             if (!await _todoItemService.IsModelAvailableAsync())
             {
                 return Problem("Entity set 'TodoContext.TodoItem'  is null.");

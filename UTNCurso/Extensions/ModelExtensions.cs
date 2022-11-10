@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using UTNCurso.BLL.POCOs;
+using UTNCurso.Core.Domain;
 
 namespace UTNCurso.Extensions
 {

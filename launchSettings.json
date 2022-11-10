@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "utncurso",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "serviceActions": {
+        "sqlserver": "StartWithoutDebugging",
+        "utncurso": "StartDebugging",
+        "utncursoapi": "StartDebugging"
+      }
+    }
+  }
+}

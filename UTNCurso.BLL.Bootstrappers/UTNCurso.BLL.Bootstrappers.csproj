@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UTNCurso.DAL.EFCore\UTNCurso.DAL.EFCore.csproj" />
+    <ProjectReference Include="..\..\UTNCurso.Infrastructure\UTNCurso.Infrastructure.csproj" />
+    <ProjectReference Include="..\UTNCurso.Core\UTNCurso.Core.csproj" />
+    <ProjectReference Include="..\UTNCurso.Infrastructure\UTNCurso.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

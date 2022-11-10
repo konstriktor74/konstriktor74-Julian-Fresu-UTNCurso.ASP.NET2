@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -24,6 +24,7 @@
     <ProjectReference Include="..\UTNCurso.BLL.DTOs\UTNCurso.BLL.DTOs.csproj" />
     <ProjectReference Include="..\UTNCurso.BLL.Services\UTNCurso.BLL.Services.csproj" />
     <ProjectReference Include="..\UTNCurso.Common.Entities\UTNCurso.Common.Entities.csproj" />
+    <ProjectReference Include="..\UTNCurso.Core\UTNCurso.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

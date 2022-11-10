@@ -9,11 +9,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["UTNCurso/UTNCurso.csproj", "UTNCurso/"]
 COPY ["UTNCurso.BLL.Bootstrappers/UTNCurso.BLL.Bootstrappers.csproj", "UTNCurso.BLL.Bootstrappers/"]
-COPY ["UTNCurso.DAL.EFCore/UTNCurso.DAL.EFCore.csproj", "UTNCurso.DAL.EFCore/"]
-COPY ["UTNCurso.Common.Entities/UTNCurso.Common.Entities.csproj", "UTNCurso.Common.Entities/"]
+COPY ["UTNCurso.Core/UTNCurso.Core.csproj", "UTNCurso.Core/"]
+COPY ["UTNCurso.Infrastructure/UTNCurso.Infrastructure.csproj", "UTNCurso.Infrastructure/"]
 COPY ["UTNCurso.BLL.DTOs/UTNCurso.BLL.DTOs.csproj", "UTNCurso.BLL.DTOs/"]
 COPY ["UTNCurso.BLL.Services/UTNCurso.BLL.Services.csproj", "UTNCurso.BLL.Services/"]
 COPY ["UTNCurso.BLL.POCOs/UTNCurso.BLL.POCOs.csproj", "UTNCurso.BLL.POCOs/"]
+COPY ["UTNCurso.Common.Entities/UTNCurso.Common.Entities.csproj", "UTNCurso.Common.Entities/"]
+COPY ["UTNCurso.DAL.EFCore/UTNCurso.DAL.EFCore.csproj", "UTNCurso.DAL.EFCore/"]
 RUN dotnet restore "UTNCurso/UTNCurso.csproj"
 COPY . .
 WORKDIR "/src/UTNCurso"
