@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using UTNCurso.BLL.DTOs;
 using UTNCurso.Core.Domain;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 
 namespace UTNCursoApi.Controllers

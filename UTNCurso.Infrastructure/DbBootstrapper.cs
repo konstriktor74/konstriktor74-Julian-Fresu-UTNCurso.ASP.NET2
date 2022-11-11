@@ -2,10 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UTNCurso.Core.Interfaces;
-using UTNCurso.Infrastructure;
 using UTNCurso.Infrastructure.Repository;
 
-namespace UTNCurso.BLL.Bootstrappers
+namespace UTNCurso.Infrastructure
 {
     public static class DbBootstrapper
     {

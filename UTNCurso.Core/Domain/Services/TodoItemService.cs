@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.Infrastructure;
 using Microsoft.Extensions.Logging;
-using UTNCurso.BLL.DTOs;
 using UTNCurso.Core.Domain.Agendas.Entities;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 
 namespace UTNCurso.Core.Domain.Services

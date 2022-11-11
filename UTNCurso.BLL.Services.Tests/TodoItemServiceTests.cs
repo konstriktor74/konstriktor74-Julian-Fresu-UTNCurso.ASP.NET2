@@ -1,8 +1,8 @@
-using UTNCurso.BLL.DTOs;
 using UTNCurso.BLL.Services.Tests.Fakes;
 using UTNCurso.BLL.Services.Tests.Spy;
 using UTNCurso.Core.Domain.Agendas.Entities;
 using UTNCurso.Core.Domain.Services;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Mappers;
 
 namespace UTNCurso.BLL.Services.Tests

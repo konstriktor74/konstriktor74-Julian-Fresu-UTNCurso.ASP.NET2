@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using Newtonsoft.Json;
 using UTNCurso.Core.Domain;
+using UTNCurso.Core.DTOs;
 
 namespace UTNCurso.Connector
 {

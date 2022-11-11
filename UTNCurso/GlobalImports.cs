@@ -1,1 +1,1 @@
-﻿global using UTNCurso.BLL.DTOs;
+﻿global using UTNCurso.Core;

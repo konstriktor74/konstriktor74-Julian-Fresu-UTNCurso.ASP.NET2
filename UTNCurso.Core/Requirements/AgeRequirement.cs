@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace UTNCurso.BLL.Services.Requirements
+namespace UTNCurso.Core.Requirements
 {
     public class AgeRequirement : IAuthorizationRequirement
     {

@@ -1,9 +1,10 @@
-using UTNCurso.BLL.Bootstrappers;
-using UTNCurso.BLL.DTOs;
+using UTNCurso.Core;
 using UTNCurso.Core.Domain.Agendas.Entities;
 using UTNCurso.Core.Domain.Services;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 using UTNCurso.Core.Mappers;
+using UTNCurso.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

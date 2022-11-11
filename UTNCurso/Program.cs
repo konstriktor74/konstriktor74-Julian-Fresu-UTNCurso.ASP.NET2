@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using UTNCurso.BLL.Bootstrappers;
-using UTNCurso.BLL.Services.Requirements;
 using UTNCurso.Connector;
 using UTNCurso.Core.Domain.Agendas.Entities;
 using UTNCurso.Core.Domain.Services;
 using UTNCurso.Core.Domain.Users;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 using UTNCurso.Core.Mappers;
+using UTNCurso.Core.Requirements;
+using UTNCurso.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

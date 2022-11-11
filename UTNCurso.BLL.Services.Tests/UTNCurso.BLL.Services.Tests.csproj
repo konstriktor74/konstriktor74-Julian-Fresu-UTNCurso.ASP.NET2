@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UTNCurso.BLL.Services\UTNCurso.BLL.Services.csproj" />
     <ProjectReference Include="..\UTNCurso.Core\UTNCurso.Core.csproj" />
     <ProjectReference Include="..\UTNCurso.Infrastructure\UTNCurso.Infrastructure.csproj" />
   </ItemGroup>

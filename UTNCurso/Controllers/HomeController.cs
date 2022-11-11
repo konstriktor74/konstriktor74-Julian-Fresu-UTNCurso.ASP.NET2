@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using UTNCurso.Connector;
+using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 using UTNCurso.Extensions;
 using UTNCurso.Models;

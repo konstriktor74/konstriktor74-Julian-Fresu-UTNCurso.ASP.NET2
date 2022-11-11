@@ -21,7 +21,7 @@ namespace UTNCurso.BLL.Services.Tests
                 .AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"))
                 .Build();
             _todoContext = new TodoContext(new DbContextOptionsBuilder<TodoContext>()
-                .UseSqlite(_configuration.GetConnectionString("TodoContext")).Options);
+                .UseSqlServer(_configuration.GetConnectionString("TodoContextSqlServer")).Options);
         }
 
         [TestInitialize]

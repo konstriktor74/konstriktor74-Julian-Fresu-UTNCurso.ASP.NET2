@@ -21,6 +21,8 @@ services:
         - SA_PASSWORD=yourStrong(!)Password
     ports:
       # Db
+      # el puerto del connection string se pasa con "{serverName/ip},{puerto} ej: 127.0.0.1,7777"
+      # host (mi operativo): contenedor
         - "7777:1433"
   utncursoapi:
     image: ${DOCKER_REGISTRY-}utncursoapi

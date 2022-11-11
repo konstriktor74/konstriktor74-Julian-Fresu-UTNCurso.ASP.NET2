@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UTNCurso.BLL.DTOs
+namespace UTNCurso.Core.DTOs
 {
     public class TodoItemDto
     {
