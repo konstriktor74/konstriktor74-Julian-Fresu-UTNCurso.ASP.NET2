@@ -1,0 +1,16 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model TodoItemDto
+@{
+}
+<form asp-action="SearchResults">
+    <label asp-for="Task" class="control-label"></label>
+    <input type="text" asp-for="Task">
+    <label asp-for="IsCompleted" class="control-label"></label>
+    <input type="checkbox" asp-for="IsCompleted">
+    <br />
+    <br />
+    <input type="submit" value="Search" class="btn btn-primary" /> |
+    <a asp-action="Index">Back to List</a>
+</form>

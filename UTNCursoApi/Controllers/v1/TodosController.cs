@@ -4,9 +4,11 @@ using UTNCurso.Core.Domain;
 using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 
-namespace UTNCursoApi.Controllers
+namespace UTNCursoApi.Controllers.v1
 {
+    [ApiVersion("1.0")]
     [ApiController]
+    //[Route("{v:apiVersion}/[controller]")]
     [Route("[controller]")]
     public class TodosController : ControllerBase
     {
@@ -26,29 +28,25 @@ namespace UTNCursoApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemDto>> GetById([FromRoute] long id)
+        public async Task<TodoItemDto> GetById([FromRoute] long id)
         {
             var todoItem = await _todoItemService.GetAsync(id);
-
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
 
             return todoItem;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Result>> Post([FromBody] TodoItemDto request)
+        public async Task<Result> Post([FromBody] TodoItemDto request)
         {
             var result = await _todoItemService.CreateAsync(request);
 
-            if (result.StatusCode == (int)HttpStatusCode.NotFound)
-            {
-                return NotFound();
-            }
-
             return result;
+        }
+
+        [HttpGet("search")]
+        public async Task<IEnumerable<TodoItemDto>> Search([FromQuery] string taskDescription, [FromQuery] bool? isCompleted)
+        {
+            return await _todoItemService.Search(taskDescription, isCompleted);
         }
     }
 }

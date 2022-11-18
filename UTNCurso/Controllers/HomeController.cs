@@ -32,6 +32,18 @@ namespace UTNCurso.Controllers
             return View(await _todoApiClient.GetAllTodoItems());
         }
 
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchResults([Bind("Task,IsCompleted")] TodoItemDto todoItemDto)
+        {
+            return View("SearchResults", await _todoApiClient.Search(todoItemDto.Task, todoItemDto.IsCompleted));
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Search()
+        {
+            return View();
+        }
+
         // GET: TodoItems/Details/5
         [Authorize(Policy = "IsAdult")]
         public async Task<IActionResult> Details(long? id)

@@ -25,6 +25,11 @@ namespace UTNCurso.Core.Mappers
             }
         }
 
+        public IEnumerable<TodoItemDto> MapDalToDto(IReadOnlyCollection<TodoItem> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public TodoItem MapDtoToDal(TodoItemDto dto)
         {
             return TodoItem.Create(dto.Task, dto.IsCompleted, dto.LastModifiedDate, dto.Id);

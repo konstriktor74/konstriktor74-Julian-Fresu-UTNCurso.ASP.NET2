@@ -1,0 +1,14 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<TodoItemDto>
+<h1>Resultados</h1>
+
+@{
+    foreach (var item in Model)
+    {
+        <ul>
+            <li>@item.Task | IsCompleted: @item.IsCompleted</li>
+        </ul>
+    }
+}

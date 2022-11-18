@@ -1,8 +1,10 @@
 ﻿using System.Data.Entity.Infrastructure;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using UTNCurso.Core.Domain.Agendas.Entities;
 using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
+using System.Linq;
 
 namespace UTNCurso.Core.Domain.Services
 {
@@ -120,6 +122,24 @@ namespace UTNCurso.Core.Domain.Services
             }
 
             return agenda.Result;
+        }
+
+        public async Task<IEnumerable<TodoItemDto>> Search(string taskDescription, bool? isCompleted)
+        {
+            var agendas = await _agendaRepository.GetAll();
+            var results = _mapper.MapDalToDto(agendas.SelectMany(x => x.TodoItems));
+
+            if(taskDescription is not null)
+            {
+                results = results.Where(x => x.Task.Contains(taskDescription));
+            }
+            
+            if (isCompleted.HasValue)
+            {
+                results = results.Where(x => x.IsCompleted == isCompleted);
+            }
+
+            return results;
         }
     }
 }

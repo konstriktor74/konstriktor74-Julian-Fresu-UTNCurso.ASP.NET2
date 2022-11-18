@@ -7,5 +7,7 @@
         public TDto MapDalToDto(TDal entity);
 
         public IEnumerable<TDto> MapDalToDto(IEnumerable<TDal> entities);
+
+        public IEnumerable<TDto> MapDalToDto(IReadOnlyCollection<TDal> entities);
     }
 }

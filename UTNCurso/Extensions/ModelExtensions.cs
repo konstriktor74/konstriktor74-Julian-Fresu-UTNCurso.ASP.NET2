@@ -9,7 +9,7 @@ namespace UTNCurso.Extensions
         {
             foreach (var error in errors)
             {
-                modelState.AddModelError(error.ComponentName, error.Message);
+                modelState.AddModelError(error?.ComponentName, error?.Message);
             }
 
             return modelState;

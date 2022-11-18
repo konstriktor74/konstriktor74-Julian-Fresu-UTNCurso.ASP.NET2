@@ -10,5 +10,7 @@ namespace UTNCurso.Connector
         Task<Result> CreateTodoItem(TodoItemDto todoItem);
 
         Task<TodoItemDto> GetAsync(long value);
+
+        Task<IEnumerable<TodoItemDto>> Search(string taskDescription, bool? isCompleted);
     }
 }

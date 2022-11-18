@@ -16,5 +16,7 @@ namespace UTNCurso.Core.Interfaces
         Task<Result> UpdateAsync(TodoItemDto todoItemDto);
 
         Task<Result> RemoveAsync(long id);
+
+        Task<IEnumerable<TodoItemDto>> Search(string taskDescription, bool? isCompleted);
     }
 }

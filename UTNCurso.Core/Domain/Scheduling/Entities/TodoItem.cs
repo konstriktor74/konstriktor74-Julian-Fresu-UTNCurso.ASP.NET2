@@ -16,22 +16,14 @@
         public static TodoItem Create(string description, bool isCompleted)
         {
             return new TodoItem(
-                new ValueObjects.Task
-                {
-                    Description = description,
-                    IsCompleted = isCompleted
-                },
+                ValueObjects.Task.Create(description, isCompleted),
                 DateTime.UtcNow);
         }
 
         public static TodoItem Create(string description, bool isCompleted, DateTime? lastModifiedDate, long id)
         {
             return new TodoItem(
-                new ValueObjects.Task
-                {
-                    Description = description,
-                    IsCompleted = isCompleted
-                },
+                ValueObjects.Task.Create(description, isCompleted),
                 lastModifiedDate,
                 id);
         }
