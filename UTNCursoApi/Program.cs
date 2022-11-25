@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(x =>
 builder.Services.AddApiVersioning(x =>
 {
     x.ReportApiVersions = true;
-    x.AssumeDefaultVersionWhenUnspecified = false;
+    x.AssumeDefaultVersionWhenUnspecified = true;
     x.DefaultApiVersion = new ApiVersion(1, 0);
     x.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(), new QueryStringApiVersionReader(), new HeaderApiVersionReader("api-version"), new MediaTypeApiVersionReader());
 });
